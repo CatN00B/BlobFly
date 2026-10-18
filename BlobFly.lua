@@ -2,82 +2,48 @@ local _P=game:GetService("Players")
 local _R=game:GetService("RunService")
 local _H=game:GetService("HttpService")
 local _L=_P.LocalPlayer
-
-local _a,_b,_c,_d,_e,_f,_g,_h,_i,_j,_k,_l,_m,_n,_o,_p,_q,_r,_s,_t,_u,_v,_w,_x,_y,_z
-local _A,_B,_C,_D,_E,_F,_G,_I,_J,_K,_M,_N,_O,_Q,_S,_T,_U,_V,_W,_X,_Y,_Z
-local _65,_66,_67,_68,_69,_70
-
-local function _f0(_1,_2)
-    local _3,_4=pcall(memory_read,"uintptr_t",_1)
-    if _3 and _4 and _4~=0 then return _4 end
-end
-local function _f1(_5)
-    local _6,_7=pcall(memory_read,"float",_5)
-    if _6 and _7 and _7==_7 then return _7 end
-end
-local function _f2(_8)
-    local _9,_10,_11=_f1(_8),_f1(_8+4),_f1(_8+8)
-    if _9 and _10 and _11 then return Vector3.new(_9,_10,_11) end
-end
-local function _f3(_12,_13)
-    pcall(memory_write,"float",_12,_13.X)
-    pcall(memory_write,"float",_12+4,_13.Y)
-    pcall(memory_write,"float",_12+8,_13.Z)
-end
-
-local function _f4()
-    local _14=httpget("https://offsets.imtheo.lol/roblox/version")
+local _a=nil
+local _b={c1=nil,c2=nil,c3="position",c4=false,c5=60,c6=0,c7=nil,c8=nil,c9=nil,c10=false,c11=nil,c12=0,c13=nil,c14=nil,c15=false}
+local function _d(_1) local _2,_3=pcall(memory_read,"uintptr_t",_1) if _2 and _3 and _3~=0 then return _3 end end
+local function _e(_4) local _5,_6=pcall(memory_read,"float",_4) if _5 and _6 and _6==_6 then return _6 end end
+local function _f(_7) local _8,_9,_10=_e(_7),_e(_7+4),_e(_7+8) if _8 and _9 and _10 then return Vector3.new(_8,_9,_10) end end
+local function _g(_11,_12) pcall(memory_write,"float",_11,_12.X) pcall(memory_write,"float",_11+4,_12.Y) pcall(memory_write,"float",_11+8,_12.Z) end
+local function _h()
+    local _13=httpget("https://offsets.imtheo.lol/roblox/version")
+    if not _13 or _13=="" then return nil end
+    _13=_13:gsub("%s+","")
+    local _14=httpget("https://offsets.imtheo.lol/".._13.."/offsets.json")
     if not _14 or _14=="" then return nil end
-    _14=_14:gsub("%s+","")
-    local _15=httpget("https://offsets.imtheo.lol/".._14.."/offsets.json")
-    if not _15 or _15=="" then return nil end
-    local _16,_17=pcall(function() return _H:JSONDecode(_15) end)
-    if not _16 or not _17 then return nil end
-    return _17.Offsets
+    local _15,_16=pcall(function() return _H:JSONDecode(_14) end)
+    if not _15 or not _16 then return nil end
+    return _16.Offsets
 end
-
-local function _f5()
-    _a=_f4()
+local function _i()
+    _a=_h()
     if not _a then return false end
-    local _18=_a.Primitive or {}
-    _b=_18.Position
-    _c=_18.AssemblyLinearVelocity or _18.Velocity or _18.LinearVelocity
-    if not _b then return false end
-    if not _c then _d="position" end
+    local _17=_a.Primitive or {}
+    _b.c1=_17.Position
+    _b.c2=_17.AssemblyLinearVelocity or _17.Velocity or _17.LinearVelocity
+    if not _b.c1 then return false end
+    if not _b.c2 then _b.c3="position" end
     return true
 end
-
-local function _f6(_19)
-    if not _19 or not _a or not _a.BasePart or not _a.BasePart.Primitive then return nil end
-    local _20=_f0(_19.Address+_a.BasePart.Primitive)
-    if not _20 or _20<0x10000 or _20>0x7FFFFFFFFFFF then return nil end
-    return _20
+local function _j(_18)
+    if not _18 or not _a or not _a.BasePart or not _a.BasePart.Primitive then return nil end
+    local _19=_d(_18.Address+_a.BasePart.Primitive)
+    if not _19 or _19<0x10000 or _19>0x7FFFFFFFFFFF then return nil end
+    return _19
 end
-
-local function _f7()
-    local _21=_L.Character
-    return _21 and _21:FindFirstChild("HumanoidRootPart")
-end
-
-local function _f15()
-    _f=nil
-    _g=nil
-    _h=nil
-    _i=nil
-    _e=0
-end
-
-local function _f8()
+local function _k() local _20=_L.Character return _20 and _20:FindFirstChild("HumanoidRootPart") end
+local function _l() local _21=_L.Character return _21 and _21:FindFirstChildOfClass("Humanoid") end
+local function _m() _b.c11=nil _b.c9=nil _b.c7=nil _b.c8=nil _b.c12=0 end
+local function _n()
     local _22=tick()
-    if _22-_e<1.0 and _f and _f.Parent then
-        if not _g or not _g.Parent or _g.Parent~=_f.Parent then
-            _f15()
-        else
-            return _f
-        end
+    if _22-_b.c12<1.0 and _b.c11 and _b.c11.Parent then
+        if not _b.c9 or not _b.c9.Parent or _b.c9.Parent~=_b.c11.Parent then _m() else return _b.c11 end
     end
-    _e=_22
-    local _23=_f7()
+    _b.c12=_22
+    local _23=_k()
     if not _23 then return nil end
     local _24=_23.Position
     local _25,_26=nil,15
@@ -87,176 +53,136 @@ local function _f8()
         local _30=_29.ClassName
         if _30=="Seat" or _30=="VehicleSeat" then
             local _31,_32=pcall(function() return _29.Position end)
-            if _31 and _32 then
-                local _33=(_32-_24).Magnitude
-                if _33<_26 then _26,_25=_33,_29 end
-            end
+            if _31 and _32 then local _33=(_32-_24).Magnitude if _33<_26 then _26,_25=_33,_29 end end
         end
     end
-    _f=_25
+    _b.c11=_25
     return _25
 end
-
-local function _f9()
-    if _g and _g.Parent and _h then
-        local _66b=_f8()
-        if _66b and _66b.Parent==_g.Parent then
-            return true
-        end
-        _f15()
+local function _o()
+    if _b.c9 and _b.c9.Parent and _b.c7 then
+        local _34=_n()
+        if _34 and _34.Parent==_b.c9.Parent then return true end
+        _m()
     end
-    local _34=_f8()
-    if not _34 then return false end
-    local _35=_34.Parent
+    local _35=_n()
     if not _35 then return false end
-    local _36=_35:FindFirstChild("HumanoidRootPart")
+    local _36=_35.Parent
     if not _36 then return false end
-    _g=_36
-    _i=_36
-    _h=_f6(_36)
-    return _h~=nil
+    local _37=_36:FindFirstChild("HumanoidRootPart")
+    if not _37 then return false end
+    _b.c9=_37
+    _b.c8=_37
+    _b.c7=_j(_37)
+    return _b.c7~=nil
 end
-
-local function _f16()
-    local _71=_L.Character
-    local _72=_71 and _71:FindFirstChildOfClass("Humanoid")
-    if not _72 then return false end
-    local _73,_74=pcall(function() return _72.SeatPart end)
-    if _73 and _74 then return true end
-    if _f and _f.Parent then
-        local _75,_76=pcall(function() return _f.Occupant end)
-        if _75 and _76 and _76==_72 then return true end
+local function _p()
+    local _38=_l()
+    if not _38 then return false end
+    local _39,_40=pcall(function() return _38.SeatPart end)
+    if _39 and _40 then return true end
+    if _b.c11 and _b.c11.Parent then
+        local _41,_42=pcall(function() return _b.c11.Occupant end)
+        if _41 and _42 and _42==_38 then return true end
     end
-    if _g and _g.Parent then
-        local _77=_f7()
-        if _77 then
-            local _78,_79=pcall(function() return _g.Position end)
-            local _80,_81=pcall(function() return _77.Position end)
-            if _78 and _80 and _79 and _81 then
-                if (_79-_81).Magnitude < 8 then return true end
-            end
+    if _b.c9 and _b.c9.Parent then
+        local _43=_k()
+        if _43 then
+            local _44,_45=pcall(function() return _b.c9.Position end)
+            local _46,_47=pcall(function() return _43.Position end)
+            if _44 and _46 and _45 and _47 and (_45-_47).Magnitude<8 then return true end
         end
     end
     return false
 end
-
-local function _f10(_37)
-    local _38,_39,_40=_37.CFrame.LookVector,_37.CFrame.RightVector,Vector3.yAxis
-    local _41=Vector3.zero
-    if iskeypressed(0x57) then _41=_41+_38 end
-    if iskeypressed(0x53) then _41=_41-_38 end
-    if iskeypressed(0x44) then _41=_41+_39 end
-    if iskeypressed(0x41) then _41=_41-_39 end
-    if iskeypressed(0x20) then _41=_41+_40 end
-    if iskeypressed(0x11) then _41=_41-_40 end
-    if _41.Magnitude>0 then _41=_41.Unit end
-    return _41
+local function _q(_48)
+    local _49,_50,_51=_48.CFrame.LookVector,_48.CFrame.RightVector,Vector3.yAxis
+    local _52=Vector3.zero
+    if iskeypressed(0x57) then _52=_52+_49 end
+    if iskeypressed(0x53) then _52=_52-_49 end
+    if iskeypressed(0x44) then _52=_52+_50 end
+    if iskeypressed(0x41) then _52=_52-_50 end
+    if iskeypressed(0x20) then _52=_52+_51 end
+    if iskeypressed(0x11) then _52=_52-_51 end
+    if _52.Magnitude>0 then _52=_52.Unit end
+    return _52
 end
-
-local function _f11(_42)
-    if not _f16() then
-        if _k then _f13() UI.SetValue("bf_on",false) end
-        return
-    end
-    if not _h and not _f9() then return end
-    local _43=_h
-    if not _43 then return end
-    local _44=workspace.CurrentCamera
-    if not _44 then return end
+local function _r(_53)
+    if not _p() then if _b.c4 then _s() UI.SetValue("bf_on",false) end return end
+    if not _b.c7 and not _o() then return end
+    local _54=_b.c7
+    if not _54 then return end
+    local _55=workspace.CurrentCamera
+    if not _55 then return end
     pcall(function()
-        local _45=_f10(_44)
-        if _d=="position" and _b then
-            local _46=_f2(_43+_b)
-            if _46 then _f3(_43+_b,_46+_45*_j*_42) end
-        elseif _c then
-            _f3(_43+_c,_45*_j)
+        local _56=_q(_55)
+        if _b.c3=="position" and _b.c1 then
+            local _57=_f(_54+_b.c1)
+            if _57 then _g(_54+_b.c1,_57+_56*_b.c5*_53) end
+        elseif _b.c2 then
+            _g(_54+_b.c2,_56*_b.c5)
         end
     end)
 end
-
-local function _f12()
-    if _k then return end
-    if not _a and not _f5() then
-        notify("Offsets failed to load","Blob Fly",3)
-        return
-    end
-    if not _b then
-        notify("No Position offset","Blob Fly",3)
-        return
-    end
-    _l=true
-    if not _f9() then return end
-    _k=true
-    _m=tick()
-    if _n then _n:Disconnect() end
-    _n=_R.RenderStepped:Connect(function()
-        local _47=tick()
-        local _48=_47-_m
-        _m=_47
-        if _48>0.1 then _48=0.1 elseif _48<0 then _48=0 end
-        pcall(_f11,_48)
+local function _t()
+    if _b.c4 then return end
+    if not _a and not _i() then notify("Offsets failed to load","Blob Fly",3) return end
+    if not _b.c1 then notify("No Position offset","Blob Fly",3) return end
+    _b.c10=true
+    if not _o() then return end
+    _b.c4=true
+    _b.c6=tick()
+    if _b.c13 then _b.c13:Disconnect() end
+    _b.c13=_R.RenderStepped:Connect(function()
+        local _58=tick()
+        local _59=_58-_b.c6
+        _b.c6=_58
+        if _59>0.1 then _59=0.1 elseif _59<0 then _59=0 end
+        pcall(_r,_59)
     end)
     notify("Blob Fly ON","Blob Fly",2)
 end
-
-local function _f13()
-    _l=false
-    if not _k then return end
-    _k=false
-    if _n then _n:Disconnect() _n=nil end
+function _s()
+    _b.c10=false
+    if not _b.c4 then return end
+    _b.c4=false
+    if _b.c13 then _b.c13:Disconnect() _b.c13=nil end
     notify("Blob Fly OFF","Blob Fly",2)
 end
-
-local function _f14()
-    if _k then _f13() else _f12() end
-    UI.SetValue("bf_on",_k)
+local function _u()
+    if _b.c4 then _s() else _t() end
+    UI.SetValue("bf_on",_b.c4)
 end
-
-UI.AddTab("Blob Fly",function(_49)
-    local _50=_49:Section("Fly","Left")
-    _50:Toggle("bf_on","Fly Blob",false,function(_51)
-        if _51 then _f12() else _f13() end
-    end)
-    _o=_50:Keybind("bf_kb",0x46,"toggle")
-    _50:SliderInt("bf_speed","Speed",10,300,_j,function(_52) _j=_52 end)
-    _50:Combo("bf_mode","Mode",{"position","velocity"},0,function(_53)
-        _d=(_53==0) and "position" or "velocity"
-    end)
+UI.AddTab("Blob Fly",function(_60)
+    local _61=_60:Section("Fly","Left")
+    _61:Toggle("bf_on","Fly Blob",false,function(_62) if _62 then _t() else _s() end end)
+    _b.c14=_61:Keybind("bf_kb",0x54,"toggle")
+    _61:SliderInt("bf_speed","Speed",10,300,_b.c5,function(_63) _b.c5=_63 end)
+    _61:Combo("bf_mode","Mode",{"position","velocity"},0,function(_64) _b.c3=(_64==0) and "position" or "velocity" end)
 end)
-
-_j=60
-_d="position"
-_k=false
-_l=false
-_e=0
-
 task.spawn(function()
     while true do
-        local _54=false
-        if _o then
-            local _55,_56=pcall(function() return _o:IsEnabled() end)
-            _54=_55 and _56==true
-        end
-        if _54 and not _p then pcall(_f14) end
-        _p=_54
+        local _65=false
+        if _b.c14 then local _66,_67=pcall(function() return _b.c14:IsEnabled() end) _65=_66 and _67==true end
+        if _65 and not _b.c15 then pcall(_u) end
+        _b.c15=_65
         wait(0.02)
     end
 end)
-
 task.spawn(function()
     while true do
-        if _l and not _k then
-            if _a or _f5() then
-                if _f9() then
-                    _k=true
-                    _m=tick()
-                    if _n then _n:Disconnect() end
-                    _n=_R.RenderStepped:Connect(function()
-                        local _57=tick()
-                        local _58=_57-_m
-                        _m=_57
-                        if _58>0.1 then _58=0.1 elseif _58<0 then _58=0 end
-                        pcall(_f11,_58)
+        if _b.c10 and not _b.c4 then
+            if _a or _i() then
+                if _o() then
+                    _b.c4=true
+                    _b.c6=tick()
+                    if _b.c13 then _b.c13:Disconnect() end
+                    _b.c13=_R.RenderStepped:Connect(function()
+                        local _68=tick()
+                        local _69=_68-_b.c6
+                        _b.c6=_68
+                        if _69>0.1 then _69=0.1 elseif _69<0 then _69=0 end
+                        pcall(_r,_69)
                     end)
                     notify("Blob Fly ON","Blob Fly",2)
                     UI.SetValue("bf_on",true)
@@ -266,27 +192,14 @@ task.spawn(function()
         wait(0.2)
     end
 end)
-
 task.spawn(function()
+    local _70=nil
     while true do
-        local _59=nil
-        local _60=_L.Character
-        local _61=_60 and _60:FindFirstChildOfClass("Humanoid")
-        if _61 then
-            local _62,_63=pcall(function() return _61.SeatPart end)
-            if _62 then _59=_63 end
-        end
-        if _59~=_65 then
-            _65=_59
-            _f15()
-        end
+        local _71=nil
+        local _72=_l()
+        if _72 then local _73,_74=pcall(function() return _72.SeatPart end) if _73 then _71=_74 end end
+        if _71~=_70 then _70=_71 _m() end
         wait(0.1)
     end
 end)
-
-task.spawn(function()
-    if not _f5() then
-        wait(30)
-        _f5()
-    end
-end)
+task.spawn(function() if not _i() then wait(30) _i() end end)
