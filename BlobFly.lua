@@ -40,8 +40,11 @@ local function _k() local _20=_L.Character return _20 and _20:FindFirstChild("Hu
 local function _l() local _21=_L.Character return _21 and _21:FindFirstChildOfClass("Humanoid") end
 local function _m() _b.c11=nil _b.c9=nil _b.c7=nil _b.c8=nil _b.c12=0 end
 local function _n()
+    if _b.c11 and _b.c11.Parent and _b.c9 and _b.c9.Parent and _b.c9.Parent==_b.c11.Parent then
+        return _b.c11
+    end
     local _22=tick()
-    if _22-_b.c12<1.0 and _b.c11 and _b.c11.Parent then
+    if _22-_b.c12<2.0 and _b.c11 and _b.c11.Parent then
         if not _b.c9 or not _b.c9.Parent or _b.c9.Parent~=_b.c11.Parent then _m() else return _b.c11 end
     end
     _b.c12=_22
@@ -140,8 +143,8 @@ local function _t()
     if not _a and not _i() then notify("Offsets failed to load","Blob Fly",3) return end
     if not _b.c1 then notify("No Position offset","Blob Fly",3) return end
     _b.c10=true
-    if not _o() then return end
     _b.c4=true
+    UI.SetValue("bf_on",true)
     _b.c6=tick()
     if _b.c13 then _b.c13:Disconnect() end
     _b.c13=_R.RenderStepped:Connect(function()
@@ -152,6 +155,7 @@ local function _t()
         pcall(_r,_59)
     end)
     notify("Blob Fly ON","Blob Fly",2)
+    task.spawn(function() _o() end)
 end
 function _s()
     _b.c10=false
