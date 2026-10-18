@@ -4,6 +4,8 @@ local _H=game:GetService("HttpService")
 local _L=_P.LocalPlayer
 local _a=nil
 local _b={c1=nil,c2=nil,c3="position",c4=false,c5=60,c6=0,c7=nil,c8=nil,c9=nil,c10=false,c11=nil,c12=0,c13=nil,c14=nil,c15=false}
+local _c16=0
+local _c17=0
 local function _d(_1) local _2,_3=pcall(memory_read,"uintptr_t",_1) if _2 and _3 and _3~=0 then return _3 end end
 local function _e(_4) local _5,_6=pcall(memory_read,"float",_4) if _5 and _6 and _6==_6 then return _6 end end
 local function _f(_7) local _8,_9,_10=_e(_7),_e(_7+4),_e(_7+8) if _8 and _9 and _10 then return Vector3.new(_8,_9,_10) end end
@@ -85,12 +87,13 @@ local function _p()
         local _41,_42=pcall(function() return _b.c11.Occupant end)
         if _41 and _42 and _42==_38 then return true end
     end
+    if _b.c9 and _b.c9.Parent and _b.c11 and _b.c11.Parent and _b.c9.Parent==_b.c11.Parent then return true end
     if _b.c9 and _b.c9.Parent then
         local _43=_k()
         if _43 then
             local _44,_45=pcall(function() return _b.c9.Position end)
             local _46,_47=pcall(function() return _43.Position end)
-            if _44 and _46 and _45 and _47 and (_45-_47).Magnitude<8 then return true end
+            if _44 and _46 and _45 and _47 and (_45-_47).Magnitude<30 then return true end
         end
     end
     return false
@@ -108,7 +111,15 @@ local function _q(_48)
     return _52
 end
 local function _r(_53)
-    if not _p() then if _b.c4 then _s() UI.SetValue("bf_on",false) end return end
+    if not _p() then
+        _c17=_c17+1
+        if _c17>30 then
+            _c17=0
+            if _b.c4 then _s() UI.SetValue("bf_on",false) end
+        end
+        return
+    end
+    _c17=0
     if not _b.c7 and not _o() then return end
     local _54=_b.c7
     if not _54 then return end
@@ -194,11 +205,25 @@ task.spawn(function()
 end)
 task.spawn(function()
     local _70=nil
+    local _c18=0
     while true do
         local _71=nil
         local _72=_l()
         if _72 then local _73,_74=pcall(function() return _72.SeatPart end) if _73 then _71=_74 end end
-        if _71~=_70 then _70=_71 _m() end
+        if _71~=_70 then
+            if _71==nil then
+                _c18=_c18+1
+                if _c18>10 then
+                    _c18=0
+                    _70=nil
+                    _m()
+                end
+            else
+                _c18=0
+                _70=_71
+                _m()
+            end
+        end
         wait(0.1)
     end
 end)
