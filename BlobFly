@@ -1,4 +1,3 @@
--- Blob Fly
 local _P=game:GetService("Players")
 local _R=game:GetService("RunService")
 local _H=game:GetService("HttpService")
@@ -118,6 +117,29 @@ local function _f9()
     return _h~=nil
 end
 
+local function _f16()
+    local _71=_L.Character
+    local _72=_71 and _71:FindFirstChildOfClass("Humanoid")
+    if not _72 then return false end
+    local _73,_74=pcall(function() return _72.SeatPart end)
+    if _73 and _74 then return true end
+    if _f and _f.Parent then
+        local _75,_76=pcall(function() return _f.Occupant end)
+        if _75 and _76 and _76==_72 then return true end
+    end
+    if _g and _g.Parent then
+        local _77=_f7()
+        if _77 then
+            local _78,_79=pcall(function() return _g.Position end)
+            local _80,_81=pcall(function() return _77.Position end)
+            if _78 and _80 and _79 and _81 then
+                if (_79-_81).Magnitude < 8 then return true end
+            end
+        end
+    end
+    return false
+end
+
 local function _f10(_37)
     local _38,_39,_40=_37.CFrame.LookVector,_37.CFrame.RightVector,Vector3.yAxis
     local _41=Vector3.zero
@@ -132,6 +154,10 @@ local function _f10(_37)
 end
 
 local function _f11(_42)
+    if not _f16() then
+        if _k then _f13() UI.SetValue("bf_on",false) end
+        return
+    end
     if not _h and not _f9() then return end
     local _43=_h
     if not _43 then return end
